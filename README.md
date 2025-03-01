@@ -1,6 +1,12 @@
 # OneShot Builds
 
-Welcome to OneShot Builds - where every project is crafted with precision and purpose. Visit us at [oneshotbuilds.com](https://oneshotbuilds.com).
+<div align="center">
+  <img src=".github/assets/images/oneshot-cyber-archer.png" alt="OneShot Builds - Cyber Archer" width="100%">
+  <br>
+  <h3>One purpose. One solution. One shot.</h3>
+</div>
+
+Welcome to OneShot Builds - where every project is crafted with precision and purpose, hitting the mark every time. Visit us at [oneshotbuilds.com](https://oneshotbuilds.com).
 
 ## Our Projects
 

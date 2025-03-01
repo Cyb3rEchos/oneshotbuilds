@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="320" version="1.1" viewBox="0 0 1280 320" xmlns="http://www.w3.org/2000/svg">
+ <rect width="1280" height="320" fill="#1a1a1a"/>
+ <text x="640" y="160" dominant-baseline="middle" fill="#ffffff" font-family="Arial" font-size="64" text-anchor="middle">OneShot Builds</text>
+ <text x="640" y="220" dominant-baseline="middle" fill="#808080" font-family="Arial" font-size="24" text-anchor="middle">One purpose. One solution. One shot.</text>
+</svg> 
