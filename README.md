@@ -1,7 +1,7 @@
 # OneShot Builds
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Cyb3rEchos/oneshotbuilds/main/.github/assets/images/oneshot-cyber-archer.png" alt="OneShot Builds - Cyber Archer" width="100%">
+  <img src="assets/images/oneshot-cyber-archer.png" alt="OneShot Builds - Cyber Archer" width="100%">
   <br>
   <h3>One purpose. One solution. One shot.</h3>
 </div>
