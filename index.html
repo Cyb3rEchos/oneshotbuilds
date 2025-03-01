@@ -3,126 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser Games Collection</title>
+    <title>OneShot Builds - Precision-Crafted Web Applications</title>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --border-color: #2c3e50;
-            --success-color: #27ae60;
-            --hover-color: #357abd;
+            --primary-color: #00ff9d;
+            --secondary-color: #00b8ff;
+            --background-color: #0a0a0a;
+            --card-bg: rgba(16, 16, 16, 0.95);
+            --text-color: #ffffff;
+            --accent-color: #00ff9d;
+            --hover-color: #00cc7d;
+            --grid-color: rgba(0, 255, 157, 0.1);
+        }
+
+        @keyframes gridAnimation {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 5px var(--accent-color); }
+            50% { text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--secondary-color); }
+            100% { text-shadow: 0 0 5px var(--accent-color); }
         }
 
         body {
             margin: 0;
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
-            color: var(--secondary-color);
+            background: var(--background-color);
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridAnimation 15s linear infinite;
+        }
+
+        .hero {
+            width: 100%;
+            padding: 40px 0;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), var(--background-color)),
+                        url('assets/images/oneshot-cyber-archer.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin: 0;
             padding: 20px;
+            color: var(--primary-color);
+            animation: glowPulse 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 20px auto;
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 800px;
-            width: 100%;
+            max-width: 1200px;
+            width: 90%;
             margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 40px 20px;
         }
 
-        h1 {
-            font-size: 2.5em;
-            text-align: center;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-        }
-
-        .games-grid {
+        .builds-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
         }
 
-        .game-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+        .build-card {
+            background: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: left;
             transition: all 0.3s ease;
             cursor: pointer;
             text-decoration: none;
-            color: var(--secondary-color);
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
         }
 
-        .game-card:hover {
+        .build-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, var(--primary-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .build-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
         }
 
-        .game-title {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+        .build-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .build-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
             font-weight: bold;
+            position: relative;
         }
 
-        .game-description {
-            font-size: 1em;
-            opacity: 0.9;
-            line-height: 1.4;
+        .build-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
+        .tagline {
+            text-align: center;
+            font-size: 1.5em;
+            color: var(--secondary-color);
+            margin: 40px 0;
+            font-style: italic;
+        }
+
+        .social-links {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--grid-color);
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            color: var(--background-color);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        .social-links svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
             }
 
-            .games-grid {
+            .builds-grid {
                 grid-template-columns: 1fr;
-                padding: 10px;
+            }
+
+            .container {
+                width: 95%;
+                padding: 20px 10px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="hero">
+        <h1>OneShot Builds</h1>
+        <p>Precision-crafted web applications. Each build designed with a singular purpose, executed flawlessly.</p>
+    </div>
+
     <div class="container">
-        <h1>Browser Games Collection</h1>
+        <div class="tagline">One purpose. One solution. One shot.</div>
         
-        <div class="games-grid">
-            <a href="hangman.html" class="game-card">
-                <div class="game-title">Hangman</div>
-                <div class="game-description">
-                    Classic word guessing game with 6 body parts. Try to guess the word before the hangman is complete!
+        <div class="builds-grid">
+            <a href="hangman.html" class="build-card">
+                <div class="build-title">OneShot Hangman</div>
+                <div class="build-description">
+                    A refined take on the classic word-guessing challenge. Every guess counts in this precision-engineered word game.
                 </div>
             </a>
 
-            <a href="sudoku.html" class="game-card">
-                <div class="game-title">Sudoku</div>
-                <div class="game-description">
-                    Test your logic with this number puzzle game. Features multiple difficulty levels!
+            <a href="sudoku.html" class="build-card">
+                <div class="build-title">OneShot Sudoku</div>
+                <div class="build-description">
+                    Pure number-placement precision. A minimalist approach to the classic logic puzzle, optimized for clarity and focus.
                 </div>
             </a>
 
-            <a href="sliding_puzzle.html" class="game-card">
-                <div class="game-title">Sliding Puzzle</div>
-                <div class="game-description">
-                    Upload your own image and solve the sliding tile puzzle. Classic 8-puzzle game!
+            <a href="sliding_puzzle.html" class="build-card">
+                <div class="build-title">OneShot Slider</div>
+                <div class="build-description">
+                    Minimal sliding puzzle perfection. Upload your image and experience spatial reasoning at its finest.
                 </div>
             </a>
 
-            <a href="guess_what.html" class="game-card">
-                <div class="game-title">Guess What</div>
-                <div class="game-description">
-                    A Wordle-style game with 6 letters. Try to guess the word with limited attempts!
+            <a href="guess_what.html" class="build-card">
+                <div class="build-title">OneShot What</div>
+                <div class="build-description">
+                    Intuitive object guessing refined to its essence. A streamlined word discovery experience with calculated precision.
                 </div>
+            </a>
+        </div>
+
+        <div class="social-links">
+            <a href="https://twitter.com/cyb3rechos" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Follow @cyb3rechos
             </a>
         </div>
     </div>
