@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Puzzle Game</title>
+    
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #2c3e50;
+            --success-color: #27ae60;
+            --hover-color: #357abd;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
+            color: var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .upload-section p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-input-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        #puzzleContainer {
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            background: var(--border-color);
+            padding: 3px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .tile {
+            width: 100%;
+            height: 100%;
+            background-size: 300px 300px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .tile:not(.empty):hover {
+            transform: scale(0.95);
+        }
+
+        .tile.empty {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: default;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button.success {
+            background: var(--success-color);
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            min-height: 1.5em;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .moves-counter {
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            #puzzleContainer {
+                width: 280px;
+                height: 280px;
+            }
+
+            .tile {
+                background-size: 280px 280px;
+            }
+
+            .button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        .preview-image {
+            max-width: 150px;
+            max-height: 150px;
+            margin: 10px auto;
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sliding Puzzle</h1>
+        
+        <div class="upload-section">
+            <p>Upload an image to create your puzzle</p>
+            <div class="file-input-wrapper">
+                <button class="file-input-button">Choose Image</button>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <img id="previewImage" class="preview-image" alt="Preview">
+        </div>
+
+        <div id="puzzleContainer"></div>
+        
+        <div class="moves-counter">Moves: <span id="moveCount">0</span></div>
+        
+        <div class="controls">
+            <button id="shuffleBtn" class="button" style="display: none;">Shuffle</button>
+            <button id="showOriginalBtn" class="button" style="display: none;">Show Original</button>
+            <button id="resetBtn" class="button" style="display: none;">Reset</button>
+        </div>
+        
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const puzzleContainer = document.getElementById('puzzleContainer');
+        const imageInput = document.getElementById('imageInput');
+        const previewImage = document.getElementById('previewImage');
+        const moveCountDisplay = document.getElementById('moveCount');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const showOriginalBtn = document.getElementById('showOriginalBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const messageEl = document.getElementById('message');
+
+        let puzzle = [0,1,2,3,4,5,6,7,8];
+        let imgSrc = '';
+        let moveCount = 0;
+        let showingOriginal = false;
+        const gridSize = 300;
+        const numTilesPerRow = 3;
+        const tileSize = gridSize / numTilesPerRow;
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgSrc = e.target.result;
+                previewImage.src = imgSrc;
+                previewImage.style.display = 'block';
+                
+                // Create a temporary image to check dimensions
+                const img = new Image();
+                img.onload = function() {
+                    if (img.width < 100 || img.height < 100) {
+                        showMessage('Please choose a larger image (at least 100x100 pixels)', 'error');
+                        return;
+                    }
+                    initPuzzle();
+                    showControls();
+                };
+                img.src = imgSrc;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function showControls() {
+            shuffleBtn.style.display = 'block';
+            showOriginalBtn.style.display = 'block';
+            resetBtn.style.display = 'block';
+        }
+
+        function showMessage(text, type = '') {
+            messageEl.textContent = text;
+            messageEl.className = type ? `message-${type}` : '';
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.className = '';
+            }, 3000);
+        }
+
+        function initPuzzle() {
+            puzzle = [0,1,2,3,4,5,6,7,8];
+            moveCount = 0;
+            updateMoveCount();
+            renderPuzzle();
+            shufflePuzzle();
+        }
+
+        function updateMoveCount() {
+            moveCountDisplay.textContent = moveCount;
+        }
+
+        function renderPuzzle() {
+            puzzleContainer.innerHTML = '';
+            for (let i = 0; i < puzzle.length; i++) {
+                const tileValue = puzzle[i];
+                const tileDiv = document.createElement('div');
+                tileDiv.classList.add('tile');
+                
+                if (tileValue === 8 && !showingOriginal) {
+                    tileDiv.classList.add('empty');
+                } else {
+                    tileDiv.style.backgroundImage = `url(${imgSrc})`;
+                    const row = Math.floor(tileValue / numTilesPerRow);
+                    const col = tileValue % numTilesPerRow;
+                    tileDiv.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+                    if (!showingOriginal) {
+                        tileDiv.addEventListener('click', () => moveTile(i));
+                    }
+                }
+                puzzleContainer.appendChild(tileDiv);
+            }
+        }
+
+        function getBlankIndex() {
+            return puzzle.indexOf(8);
+        }
+
+        function isAdjacent(index1, index2) {
+            const row1 = Math.floor(index1 / numTilesPerRow);
+            const col1 = index1 % numTilesPerRow;
+            const row2 = Math.floor(index2 / numTilesPerRow);
+            const col2 = index2 % numTilesPerRow;
+            return (row1 === row2 && Math.abs(col1 - col2) === 1) ||
+                   (col1 === col2 && Math.abs(row1 - row2) === 1);
+        }
+
+        function moveTile(tileIndex) {
+            if (showingOriginal) return;
+            
+            const blankIndex = getBlankIndex();
+            if (isAdjacent(tileIndex, blankIndex)) {
+                [puzzle[tileIndex], puzzle[blankIndex]] = [puzzle[blankIndex], puzzle[tileIndex]];
+                moveCount++;
+                updateMoveCount();
+                renderPuzzle();
+                checkWin();
+            }
+        }
+
+        function checkWin() {
+            if (puzzle.every((value, index) => value === index)) {
+                showMessage('Congratulations! You solved the puzzle!', 'success');
+            }
+        }
+
+        function shufflePuzzle() {
+            let moves = 100;
+            while (moves > 0) {
+                const blankIndex = getBlankIndex();
+                const neighbors = [];
+                const row = Math.floor(blankIndex / numTilesPerRow);
+                const col = blankIndex % numTilesPerRow;
+                
+                if (row > 0) neighbors.push(blankIndex - numTilesPerRow);
+                if (row < numTilesPerRow - 1) neighbors.push(blankIndex + numTilesPerRow);
+                if (col > 0) neighbors.push(blankIndex - 1);
+                if (col < numTilesPerRow - 1) neighbors.push(blankIndex + 1);
+                
+                const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                [puzzle[blankIndex], puzzle[randomNeighbor]] = [puzzle[randomNeighbor], puzzle[blankIndex]];
+                moves--;
+            }
+            moveCount = 0;
+            updateMoveCount();
+            renderPuzzle();
+        }
+
+        shuffleBtn.addEventListener('click', () => {
+            showingOriginal = false;
+            shufflePuzzle();
+        });
+
+        showOriginalBtn.addEventListener('click', () => {
+            showingOriginal = !showingOriginal;
+            if (showingOriginal) {
+                puzzle = [0,1,2,3,4,5,6,7,8];
+                showOriginalBtn.textContent = 'Show Puzzle';
+            } else {
+                showOriginalBtn.textContent = 'Show Original';
+            }
+            renderPuzzle();
+        });
+
+        resetBtn.addEventListener('click', initPuzzle);
+    </script>
+</body>
+</html> 

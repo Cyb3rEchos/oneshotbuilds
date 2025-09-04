@@ -1,0 +1,91 @@
+{
+  "users": {
+    "cyb3rechos": {
+      "username": "cyb3rechos",
+      "games": [
+        {
+          "username": "cyb3rechos",
+          "slug": "oneshot-hangman",
+          "title": "OneShot Hangman",
+          "path": "/legacy/hangman.html",
+          "type": "legacy",
+          "createdAt": 1756873155345
+        },
+        {
+          "username": "cyb3rechos",
+          "slug": "oneshot-sudoku",
+          "title": "OneShot Sudoku",
+          "path": "/legacy/sudoku.html",
+          "type": "legacy",
+          "createdAt": 1756873155345
+        },
+        {
+          "username": "cyb3rechos",
+          "slug": "oneshot-slider",
+          "title": "OneShot Slider",
+          "path": "/legacy/sliding_puzzle.html",
+          "type": "legacy",
+          "createdAt": 1756873155345
+        },
+        {
+          "username": "cyb3rechos",
+          "slug": "oneshot-what",
+          "title": "OneShot What",
+          "path": "/legacy/guess_what.html",
+          "type": "legacy",
+          "createdAt": 1756873155345
+        },
+        {
+          "username": "cyb3rechos",
+          "slug": "oneshot-tetris",
+          "title": "OneShot Tetris",
+          "path": "/legacy/tetris.html",
+          "type": "legacy",
+          "createdAt": 1756873155345
+        }
+      ]
+    }
+  },
+  "games": [
+    {
+      "username": "cyb3rechos",
+      "slug": "oneshot-hangman",
+      "title": "OneShot Hangman",
+      "path": "/legacy/hangman.html",
+      "type": "legacy",
+      "createdAt": 1756873155345
+    },
+    {
+      "username": "cyb3rechos",
+      "slug": "oneshot-sudoku",
+      "title": "OneShot Sudoku",
+      "path": "/legacy/sudoku.html",
+      "type": "legacy",
+      "createdAt": 1756873155345
+    },
+    {
+      "username": "cyb3rechos",
+      "slug": "oneshot-slider",
+      "title": "OneShot Slider",
+      "path": "/legacy/sliding_puzzle.html",
+      "type": "legacy",
+      "createdAt": 1756873155345
+    },
+    {
+      "username": "cyb3rechos",
+      "slug": "oneshot-what",
+      "title": "OneShot What",
+      "path": "/legacy/guess_what.html",
+      "type": "legacy",
+      "createdAt": 1756873155345
+    },
+    {
+      "username": "cyb3rechos",
+      "slug": "oneshot-tetris",
+      "title": "OneShot Tetris",
+      "path": "/legacy/tetris.html",
+      "type": "legacy",
+      "createdAt": 1756873155345
+    }
+  ]
+}

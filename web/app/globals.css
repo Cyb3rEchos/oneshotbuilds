@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Vivid brand palette and gradient surface */
+:root {
+  --brand-from: 270 90% 60%; /* purple */
+  --brand-to: 220 90% 56%;   /* indigo */
+  --accent: 250 95% 62%;
+}
+
+html, body { height: 100%; }
+body {
+  @apply text-neutral-100;
+  /* Solid backdrop to avoid any banding or lines */
+  background: #0b0a26;
+}
+
+/* Subtle grid/noise overlay to add depth */
+
+
+/* Hide Next.js DevTools badge in dev (client-only element). */
+/* Aggressively hide Next.js devtools badge in dev (not present in prod) */
+body [id*="devtools" i],
+body [class*="devtools" i],
+body [aria-label*="devtools" i],
+body [aria-label*="Next.js" i],
+body a[href*="nextjs.org" i],
+body a[href*="next-devtools" i],
+body [id*="nextjs" i],
+body [class*="nextjs" i],
+body [data-nextjs],
+body [data-next-dev-overlay],
+body [data-nextjs-devtools-root],
+body [data-nextjs-dialog] {
+  display: none !important;
+}
+
+/* Utilities */
+.gradient-text {
+  background-image: linear-gradient(135deg, hsl(var(--brand-from)), hsl(var(--brand-to)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  @apply inline-flex items-center rounded-lg px-4 py-2 text-sm text-white font-medium shadow-sm transition;
+  background-image: linear-gradient(135deg, hsl(var(--brand-from)), hsl(var(--brand-to)));
+}
+.btn-primary:hover { filter: brightness(0.95); }
+
+.btn-secondary {
+  @apply inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium border text-neutral-800 bg-white transition;
+  border-color: hsl(var(--brand-from)/0.25);
+}
+.btn-secondary:hover { @apply bg-neutral-50; }
+
+.card {
+  @apply rounded-xl border bg-white text-neutral-900;
+  border-color: hsl(var(--brand-to)/0.25);
+}
+
+/* Brand band utility for gradient frames */
+.ring-gradient {
+  background-image: linear-gradient(135deg, hsl(var(--brand-from)), hsl(var(--brand-to)));
+}

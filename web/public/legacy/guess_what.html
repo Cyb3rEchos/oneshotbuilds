@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneShot Guess What</title>
+    
+    <link rel="stylesheet" href="assets/css/cyberpunk-theme.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --cell-bg: rgba(255, 255, 255, 0.15);
+            --correct-color: #27ae60;
+            --present-color: #e67e22;
+            --absent-color: #7f8c8d;
+            --text-color: #f0f0f0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --button-bg: #2980b9;
+            --button-hover: #1c5980;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+            perspective: 1000px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: rgba(16, 16, 16, 0.95);
+            border: 1px solid #00b8ff;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #00b8ff;
+            text-shadow: 0 0 5px #00b8ff;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .cell.pop {
+            animation: popIn 0.3s ease-out;
+        }
+
+        .cell.flip {
+            animation: flipIn 0.6s ease-out;
+        }
+
+        .cell.correct {
+            background: #00ff9d;
+            color: #000000;
+            text-shadow: none;
+            border-color: #00ff9d;
+            transform: rotateX(360deg);
+            box-shadow: 0 0 20px #00ff9d;
+        }
+
+        .cell.present {
+            background: #00b8ff;
+            color: #000000;
+            text-shadow: none;
+            border-color: #00b8ff;
+            transform: rotateX(360deg);
+            box-shadow: 0 0 20px #00b8ff;
+        }
+
+        .cell.absent {
+            background: rgba(0, 184, 255, 0.3);
+            color: #000000;
+            text-shadow: none;
+            border-color: rgba(0, 184, 255, 0.3);
+            transform: rotateX(360deg);
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        #guessInput {
+            padding: 12px 24px;
+            font-size: 1.1em;
+            background: rgba(16, 16, 16, 0.95);
+            color: #00b8ff;
+            border: 1px solid #00b8ff;
+            border-radius: 4px;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00b8ff;
+        }
+
+        #guessInput:focus {
+            outline: none;
+            background: rgba(16, 16, 16, 0.95);
+            box-shadow: 0 0 20px #00b8ff;
+            border-color: #00b8ff;
+        }
+
+        #guessInput::placeholder {
+            color: #00b8ff;
+            opacity: 0.5;
+        }
+
+        #submitBtn {
+            padding: 12px 24px;
+            font-size: 1.1em;
+            background: rgba(16, 16, 16, 0.95);
+            color: #00b8ff;
+            border: 1px solid #00b8ff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #00b8ff;
+        }
+
+        #submitBtn:hover:not(:disabled) {
+            background: #00b8ff;
+            color: #000000;
+            box-shadow: 0 0 20px #00b8ff;
+            transform: none;
+        }
+
+        #submitBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            min-height: 1.5em;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .message-success {
+            background: rgba(39, 174, 96, 0.2);
+        }
+
+        .message-error {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes flipIn {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .cell {
+                font-size: 1.2em;
+            }
+
+            #guessInput, #submitBtn {
+                padding: 12px;
+            }
+        }
+
+        #restartBtn {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            background: var(--correct-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #restartBtn:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-container {
+            background: rgba(16, 16, 16, 0.95);
+            border: 1px solid #00b8ff;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 184, 255, 0.5);
+            margin: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+    </a>
+
+    <div class="game-container">
+        <div class="container">
+            <h1>OneShot Guess What</h1>
+            <div id="grid"></div>
+            <div class="input-section">
+                <input type="text" id="guessInput" maxlength="6" placeholder="Enter 6-letter word">
+                <button id="submitBtn">Submit Guess</button>
+                <button id="restartBtn">Play Again</button>
+            </div>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Word list (can be expanded)
+        const words = [
+            "ORANGE", "PURPLE", "YELLOW", "SILVER", "GOLDEN",
+            "PLANET", "ROCKET", "SYSTEM", "CODING", "SCRIPT",
+            "COFFEE", "COOKIE", "DINNER", "PENCIL", "LAPTOP"
+        ];
+
+        // Game state
+        let secretWord = words[Math.floor(Math.random() * words.length)];
+        const maxAttempts = 6;
+        let currentAttempt = 0;
+        let gameOver = false;
+
+        // Create grid
+        const grid = document.getElementById("grid");
+        const cells = [];
+        
+        function createGrid() {
+            grid.innerHTML = '';
+            for (let i = 0; i < maxAttempts * 6; i++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                grid.appendChild(cell);
+                cells.push(cell);
+            }
+        }
+        createGrid();
+
+        function evaluateGuess(guess) {
+            const result = Array(6).fill("absent");
+            const secretLetters = secretWord.split('');
+            const guessLetters = guess.split('');
+
+            // Check for correct positions
+            for (let i = 0; i < 6; i++) {
+                if (guessLetters[i] === secretLetters[i]) {
+                    result[i] = "correct";
+                    secretLetters[i] = null;
+                    guessLetters[i] = null;
+                }
+            }
+
+            // Check for present letters
+            for (let i = 0; i < 6; i++) {
+                if (guessLetters[i] !== null) {
+                    const index = secretLetters.indexOf(guessLetters[i]);
+                    if (index !== -1) {
+                        result[i] = "present";
+                        secretLetters[index] = null;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        function updateGrid(guess, evaluation) {
+            const delay = 100;
+            for (let i = 0; i < 6; i++) {
+                const cellIndex = currentAttempt * 6 + i;
+                setTimeout(() => {
+                    cells[cellIndex].textContent = guess[i];
+                    cells[cellIndex].classList.add("flip");
+                    cells[cellIndex].classList.add(evaluation[i]);
+                }, i * delay);
+            }
+        }
+
+        function showMessage(text, type = '') {
+            const messageEl = document.getElementById("message");
+            messageEl.textContent = text;
+            messageEl.className = type ? `message-${type}` : '';
+        }
+
+        function handleGuess() {
+            if (gameOver) return;
+
+            const input = document.getElementById("guessInput");
+            const guess = input.value.trim().toUpperCase();
+
+            if (guess.length !== 6) {
+                showMessage("Please enter a 6-letter word", "error");
+                return;
+            }
+
+            if (!/^[A-Z]{6}$/.test(guess)) {
+                showMessage("Please use only letters", "error");
+                return;
+            }
+
+            const evaluation = evaluateGuess(guess);
+            updateGrid(guess, evaluation);
+            input.value = "";
+            currentAttempt++;
+
+            if (guess === secretWord) {
+                gameOver = true;
+                setTimeout(() => {
+                    showMessage("Congratulations! You've won!", "success");
+                    document.getElementById("restartBtn").style.display = "block";
+                }, 1500);
+            } else if (currentAttempt >= maxAttempts) {
+                gameOver = true;
+                setTimeout(() => {
+                    showMessage(`Game Over! The word was ${secretWord}`, "error");
+                    document.getElementById("restartBtn").style.display = "block";
+                }, 1500);
+            }
+        }
+
+        function restartGame() {
+            secretWord = words[Math.floor(Math.random() * words.length)];
+            currentAttempt = 0;
+            gameOver = false;
+            createGrid();
+            showMessage("");
+            document.getElementById("guessInput").disabled = false;
+            document.getElementById("submitBtn").disabled = false;
+            document.getElementById("restartBtn").style.display = "none";
+        }
+
+        // Event listeners
+        document.getElementById("submitBtn").addEventListener("click", handleGuess);
+        document.getElementById("restartBtn").addEventListener("click", restartGame);
+        
+        document.getElementById("guessInput").addEventListener("keyup", (event) => {
+            if (event.key === "Enter") {
+                handleGuess();
+            }
+        });
+    </script>
+</body>
+</html> 
